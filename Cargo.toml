@@ -1,0 +1,17 @@
+[package]
+name = "cdumay_errors"
+version = "0.1.0"
+authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/cdumay/cdumay-errors-rs"
+homepage =  "https://github.com/cdumay/cdumay-errors-rs"
+description = """
+A REST HTTP client with normalized exceptions
+"""
+
+[dependencies]
+log = "0.3"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"

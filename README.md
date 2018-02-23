@@ -23,6 +23,17 @@ let err = Error::new("Not Found".to_string(), Some(404), Some("NotFound".to_stri
 println!("{}", to_string_pretty(&err).unwrap());
 ```
 
+```json
+{
+  "code": 404,
+  "extra": {
+    "url": "https://example.dumay"
+  },
+  "message": "Not Found",
+  "msgid": "NotFound"
+}
+```
+
 ## Features
 
 - [cdumay-result](https://github.com/cdumay/cdumay-result-rs): A library to serialize and deserialize result using JSON.

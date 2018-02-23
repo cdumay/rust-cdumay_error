@@ -1,5 +1,7 @@
 # cdumay_errors
 
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
 cdumay_errors is a basic library used to standardize errors and to serialize them into json using [serde_json](https://docs.serde.rs/serde/).
 
 ## Quickstart

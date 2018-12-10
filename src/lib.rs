@@ -1,16 +1,15 @@
 #![feature(try_trait)]
 extern crate serde;
-extern crate cdumay_values;
+extern crate serde_value;
 
 #[macro_use]
 extern crate serde_derive;
 
 use std::collections::HashMap;
-use cdumay_values::Value;
 
 pub struct ErrorBuilder {
     code: u16,
-    extra: Option<HashMap<String, Value>>,
+    extra: Option<HashMap<String, serde_value::Value>>,
     message: Option<String>,
     msgid: String,
     stack: Option<String>,
@@ -30,7 +29,7 @@ impl ErrorBuilder {
         self.code = code;
         self
     }
-    pub fn extra(mut self, extra: HashMap<String, Value>) -> ErrorBuilder {
+    pub fn extra(mut self, extra: HashMap<String, serde_value::Value>) -> ErrorBuilder {
         self.extra = Some(extra);
         self
     }
@@ -48,7 +47,7 @@ impl ErrorBuilder {
             extra: self.extra,
             message: self.message.unwrap_or("".to_string()),
             msgid: self.msgid,
-            stack: self.stack
+            stack: self.stack,
         }
     }
 }
@@ -58,7 +57,7 @@ impl ErrorBuilder {
 pub struct Error {
     code: u16,
     #[serde(skip_serializing_if = "Option::is_none")]
-    extra: Option<HashMap<String, Value>>,
+    extra: Option<HashMap<String, serde_value::Value>>,
     message: String,
     msgid: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -71,10 +70,10 @@ impl Error {
     }
     pub fn code_mut(&mut self) -> &mut u16 { &mut self.code }
 
-    pub fn extra(&self) -> &Option<HashMap<String, Value>> {
+    pub fn extra(&self) -> &Option<HashMap<String, serde_value::Value>> {
         &self.extra
     }
-    pub fn extra_mut(&mut self) -> &mut Option<HashMap<String, Value>> {
+    pub fn extra_mut(&mut self) -> &mut Option<HashMap<String, serde_value::Value>> {
         &mut self.extra
     }
 

@@ -11,6 +11,6 @@ A library to serialize and deserialize error using serde
 """
 
 [dependencies]
-cdumay_values = { git = "https://github.com/cdumay/cdumay-values-rs" }
 serde = "1.0"
 serde_derive = "1.0"
+serde-value = "0.5"

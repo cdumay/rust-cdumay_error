@@ -7,10 +7,10 @@ readme = "README.md"
 repository = "https://github.com/cdumay/cdumay-error-rs"
 homepage =  "https://github.com/cdumay/cdumay-error-rs"
 description = """
-A library to serialize and deserialize error using JSON
+A library to serialize and deserialize error using serde
 """
 
 [dependencies]
+cdumay_values = { git = "https://github.com/cdumay/cdumay-values-rs" }
 serde = "1.0"
 serde_derive = "1.0"
-cdumay_values = { path = "../cdumay-values" }

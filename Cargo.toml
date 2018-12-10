@@ -1,0 +1,16 @@
+[package]
+name = "cdumay_error"
+version = "0.1.0"
+authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/cdumay/cdumay-error-rs"
+homepage =  "https://github.com/cdumay/cdumay-error-rs"
+description = """
+A library to serialize and deserialize error using JSON
+"""
+
+[dependencies]
+serde = "1.0"
+serde_derive = "1.0"
+cdumay_values = { path = "../cdumay-values" }

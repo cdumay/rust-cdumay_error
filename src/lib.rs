@@ -5,19 +5,7 @@ extern crate serde_value;
 #[macro_use]
 extern crate serde_derive;
 
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Error {
-    code: u16,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    extra: Option<std::collections::HashMap<String, serde_value::Value>>,
-    message: String,
-    msgid: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    stack: Option<String>,
-}
-
-pub trait ErrorProperties {
+pub trait ErrorProps {
     fn code(&self) -> &u16;
     fn code_mut(&mut self) -> &mut u16;
     fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>>;
@@ -30,9 +18,21 @@ pub trait ErrorProperties {
     fn stack_mut(&mut self) -> &mut Option<String>;
 }
 
-impl Default for Error {
-    fn default() -> Error {
-        Error {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ErrorRepr {
+    code: u16,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    extra: Option<std::collections::HashMap<String, serde_value::Value>>,
+    message: String,
+    msgid: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    stack: Option<String>,
+}
+
+
+impl Default for ErrorRepr {
+    fn default() -> ErrorRepr {
+        ErrorRepr {
             msgid: "Err-00000".to_string(),
             message: String::new(),
             code: 500,
@@ -42,7 +42,7 @@ impl Default for Error {
     }
 }
 
-impl ErrorProperties for Error {
+impl ErrorProps for ErrorRepr {
     fn code(&self) -> &u16 { &self.code }
     fn code_mut(&mut self) -> &mut u16 { &mut self.code }
 
@@ -60,22 +60,22 @@ impl ErrorProperties for Error {
 }
 
 
-impl std::error::Error for Error {
+impl std::error::Error for ErrorRepr {
     fn description(&self) -> &str {
         self.message().as_str()
     }
 }
 
-impl std::fmt::Display for Error {
+impl std::fmt::Display for ErrorRepr {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}: {}", self.msgid(), self.message())
     }
 }
 
 
-impl From<std::option::NoneError> for Error {
-    fn from(_err: std::option::NoneError) -> Error {
-        Error {
+impl From<std::option::NoneError> for ErrorRepr {
+    fn from(_err: std::option::NoneError) -> ErrorRepr {
+        ErrorRepr {
             msgid: "Err-08414".to_string(),
             message: "Not Found".to_string(),
             code: 404,

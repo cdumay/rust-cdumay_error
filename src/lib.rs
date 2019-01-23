@@ -37,7 +37,7 @@ pub struct ErrorRepr {
 }
 
 impl ErrorRepr {
-    fn new(etype: ErrorType) -> ErrorRepr {
+    pub fn new(etype: ErrorType) -> ErrorRepr {
         ErrorRepr {
             code: *etype.code(),
             message: etype.message().to_string(),
@@ -46,17 +46,17 @@ impl ErrorRepr {
             stack: None,
         }
     }
-    fn code(&self) -> &u16 { &self.code }
-    fn msgid(&self) -> &String { &self.msgid }
+    pub fn code(&self) -> &u16 { &self.code }
+    pub fn msgid(&self) -> &String { &self.msgid }
 
-    fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>> { &self.extra }
-    fn extra_mut(&mut self) -> &mut Option<std::collections::HashMap<String, serde_value::Value>> { &mut self.extra }
+    pub fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>> { &self.extra }
+    pub fn extra_mut(&mut self) -> &mut Option<std::collections::HashMap<String, serde_value::Value>> { &mut self.extra }
 
-    fn message(&self) -> &String { &self.message }
-    fn message_mut(&mut self) -> &mut String { &mut self.message }
+    pub fn message(&self) -> &String { &self.message }
+    pub fn message_mut(&mut self) -> &mut String { &mut self.message }
 
-    fn stack(&self) -> &Option<String> { &self.stack }
-    fn stack_mut(&mut self) -> &mut Option<String> { &mut self.stack }
+    pub fn stack(&self) -> &Option<String> { &self.stack }
+    pub fn stack_mut(&mut self) -> &mut Option<String> { &mut self.stack }
 }
 
 impl Default for ErrorRepr {

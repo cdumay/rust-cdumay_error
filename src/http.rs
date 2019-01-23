@@ -1,4 +1,4 @@
-use crate::{ErrorType, ErrorRepr};
+use crate::{Registry, ErrorType, ErrorRepr};
 
 pub struct HttpErrors;
 
@@ -50,6 +50,60 @@ impl HttpErrors {
     pub const LOOP_DETECTED: ErrorType = ErrorType(508, "Err-30770", "Loop Detected");
     pub const NOT_EXTENDED: ErrorType = ErrorType(510, "Err-19347", "Not Extended");
     pub const NETWORK_AUTHENTICATION_REQUIRED: ErrorType = ErrorType(511, "Err-31948", "Network Authentication Required");
+}
+
+impl Registry for HttpErrors {
+    fn from_msgid(msgid: &str) -> ErrorType {
+        match msgid {
+            "Err-00565" => Self::REQUEST_TIMEOUT,
+            "Err-01377" => Self::URI_TOO_LONG,
+            "Err-01625" => Self::HTTP_VERSION_NOT_SUPPORTED,
+            "Err-02452" => Self::PRECONDITION_REQUIRED,
+            "Err-03394" => Self::NOT_IMPLEMENTED,
+            "Err-04289" => Self::NOT_ACCEPTABLE,
+            "Err-07132" => Self::FOUND,
+            "Err-07756" => Self::REQUEST_HEADER_FIELDS_TOO_LARGE,
+            "Err-08059" => Self::UNAUTHORIZED,
+            "Err-08442" => Self::CONFLICT,
+            "Err-09069" => Self::INTERNAL_SERVER_ERROR,
+            "Err-09400" => Self::LENGTH_REQUIRED,
+            "Err-10591" => Self::PAYLOAD_TOO_LARGE,
+            "Err-11298" => Self::MULTIPLE_CHOICES,
+            "Err-12136" => Self::UNAVAILABLE_FOR_LEGAL_REASONS,
+            "Err-12176" => Self::TOO_MANY_REQUESTS,
+            "Err-12280" => Self::PERMANENT_REDIRECT,
+            "Err-12512" => Self::UNSUPPORTED_MEDIA_TYPE,
+            "Err-12568" => Self::UNPROCESSABLE_ENTITY,
+            "Err-16746" => Self::SEE_OTHER,
+            "Err-16872" => Self::EXPECTATION_FAILED,
+            "Err-17336" => Self::PROXY_AUTHENTICATION_REQUIRED,
+            "Err-17595" => Self::GATEWAY_TIMEOUT,
+            "Err-18076" => Self::PAYMENT_REQUIRED,
+            "Err-18430" => Self::NOT_FOUND,
+            "Err-18979" => Self::SERVICE_UNAVAILABLE,
+            "Err-19347" => Self::NOT_EXTENDED,
+            "Err-19693" => Self::FAILED_DEPENDENCY,
+            "Err-19734" => Self::BAD_GATEWAY,
+            "Err-19916" => Self::GONE,
+            "Err-21556" => Self::NOT_MODIFIED,
+            "Err-21696" => Self::RANGE_NOT_SATISFIABLE,
+            "Err-22509" => Self::PRECONDITION_FAILED,
+            "Err-22991" => Self::UPGRADE_REQUIRED,
+            "Err-23108" => Self::MOVED_PERMANENTLY,
+            "Err-23134" => Self::FORBIDDEN,
+            "Err-23585" => Self::METHOD_NOT_ALLOWED,
+            "Err-23719" => Self::IM_A_TEAPOT,
+            "Err-25446" => Self::TEMPORARY_REDIRECT,
+            "Err-26760" => Self::BAD_REQUEST,
+            "Err-26981" => Self::MISDIRECTED_REQUEST,
+            "Err-28382" => Self::VARIANT_ALSO_NEGOTIATES,
+            "Err-30770" => Self::LOOP_DETECTED,
+            "Err-31839" => Self::USE_PROXY,
+            "Err-31948" => Self::NETWORK_AUTHENTICATION_REQUIRED,
+            "Err-32132" => Self::INSUFFICIENT_STORAGE,
+            "Err-32695" => Self::LOCKED,
+        }
+    }
 }
 
 impl From<std::option::NoneError> for ErrorRepr {

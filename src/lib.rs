@@ -83,3 +83,6 @@ impl std::fmt::Display for ErrorRepr {
     }
 }
 
+pub trait Registry {
+    fn from_msgid(msgid: &str) -> ErrorType;
+}

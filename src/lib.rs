@@ -84,5 +84,6 @@ impl std::fmt::Display for ErrorRepr {
 }
 
 pub trait Registry {
+    fn default() -> ErrorType { generic::GenericErrors::GENERIC_ERROR }
     fn from_msgid(msgid: &str) -> ErrorType;
 }

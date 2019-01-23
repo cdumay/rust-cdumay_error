@@ -1,4 +1,5 @@
 use crate::{Registry, ErrorType, ErrorRepr};
+use generic::GenericErrors;
 
 pub struct HttpErrors;
 
@@ -102,6 +103,7 @@ impl Registry for HttpErrors {
             "Err-31948" => Self::NETWORK_AUTHENTICATION_REQUIRED,
             "Err-32132" => Self::INSUFFICIENT_STORAGE,
             "Err-32695" => Self::LOCKED,
+            _ => Self::default()
         }
     }
 }

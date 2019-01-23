@@ -22,6 +22,7 @@ impl Registry for GenericErrors {
             "Err-15452" => Self::GENERIC_ERROR,
             "Err-31807" => Self::SERIALIZATION_ERROR,
             "Err-32583" => Self::UNKNOWN_ERROR,
+            _ => Self::default()
         }
     }
 }

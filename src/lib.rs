@@ -5,17 +5,24 @@ extern crate serde_value;
 #[macro_use]
 extern crate serde_derive;
 
-pub trait ErrorProps {
-    fn code(&self) -> &u16;
-    fn code_mut(&mut self) -> &mut u16;
-    fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>>;
-    fn extra_mut(&mut self) -> &mut Option<std::collections::HashMap<String, serde_value::Value>>;
-    fn message(&self) -> &String;
-    fn message_mut(&mut self) -> &mut String;
-    fn msgid(&self) -> &String;
-    fn msgid_mut(&mut self) -> &mut String;
-    fn stack(&self) -> &Option<String>;
-    fn stack_mut(&mut self) -> &mut Option<String>;
+#[cfg(feature = "http")]
+extern crate hyper;
+#[cfg(feature = "json")]
+extern crate serde_json;
+
+pub mod generic;
+#[cfg(feature = "http")]
+pub mod http;
+#[cfg(feature = "json")]
+pub mod json;
+
+#[derive(Clone, Copy)]
+pub struct ErrorType(u16, &'static str, &'static str);
+
+impl ErrorType {
+    fn id(&self) -> &str { self.1 }
+    fn code(&self) -> &u16 { &self.0 }
+    fn message(&self) -> &str { self.2 }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -29,6 +36,28 @@ pub struct ErrorRepr {
     stack: Option<String>,
 }
 
+impl ErrorRepr {
+    fn new(etype: ErrorType) -> ErrorRepr {
+        ErrorRepr {
+            code: *etype.code(),
+            message: etype.message().to_string(),
+            msgid: etype.id().to_string(),
+            extra: None,
+            stack: None,
+        }
+    }
+    fn code(&self) -> &u16 { &self.code }
+    fn msgid(&self) -> &String { &self.msgid }
+
+    fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>> { &self.extra }
+    fn extra_mut(&mut self) -> &mut Option<std::collections::HashMap<String, serde_value::Value>> { &mut self.extra }
+
+    fn message(&self) -> &String { &self.message }
+    fn message_mut(&mut self) -> &mut String { &mut self.message }
+
+    fn stack(&self) -> &Option<String> { &self.stack }
+    fn stack_mut(&mut self) -> &mut Option<String> { &mut self.stack }
+}
 
 impl Default for ErrorRepr {
     fn default() -> ErrorRepr {
@@ -42,24 +71,6 @@ impl Default for ErrorRepr {
     }
 }
 
-impl ErrorProps for ErrorRepr {
-    fn code(&self) -> &u16 { &self.code }
-    fn code_mut(&mut self) -> &mut u16 { &mut self.code }
-
-    fn extra(&self) -> &Option<std::collections::HashMap<String, serde_value::Value>> { &self.extra }
-    fn extra_mut(&mut self) -> &mut Option<std::collections::HashMap<String, serde_value::Value>> { &mut self.extra }
-
-    fn message(&self) -> &String { &self.message }
-    fn message_mut(&mut self) -> &mut String { &mut self.message }
-
-    fn msgid(&self) -> &String { &self.msgid }
-    fn msgid_mut(&mut self) -> &mut String { &mut self.msgid }
-
-    fn stack(&self) -> &Option<String> { &self.stack }
-    fn stack_mut(&mut self) -> &mut Option<String> { &mut self.stack }
-}
-
-
 impl std::error::Error for ErrorRepr {
     fn description(&self) -> &str {
         self.message().as_str()
@@ -72,15 +83,3 @@ impl std::fmt::Display for ErrorRepr {
     }
 }
 
-
-impl From<std::option::NoneError> for ErrorRepr {
-    fn from(_err: std::option::NoneError) -> ErrorRepr {
-        ErrorRepr {
-            msgid: "Err-08414".to_string(),
-            message: "Not Found".to_string(),
-            code: 404,
-            extra: None,
-            stack: None,
-        }
-    }
-}

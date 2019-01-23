@@ -1,0 +1,127 @@
+use crate::{ErrorType, ErrorRepr};
+
+pub struct HttpErrors;
+
+impl HttpErrors {
+    pub const MULTIPLE_CHOICES: ErrorType = ErrorType(300, "Err-11298", "Multiple Choices");
+    pub const MOVED_PERMANENTLY: ErrorType = ErrorType(301, "Err-23108", "Moved Permanently");
+    pub const FOUND: ErrorType = ErrorType(302, "Err-07132", "Found");
+    pub const SEE_OTHER: ErrorType = ErrorType(303, "Err-16746", "See Other");
+    pub const NOT_MODIFIED: ErrorType = ErrorType(304, "Err-21556", "Not Modified");
+    pub const USE_PROXY: ErrorType = ErrorType(305, "Err-31839", "Use Proxy");
+    pub const TEMPORARY_REDIRECT: ErrorType = ErrorType(307, "Err-25446", "Temporary Redirect");
+    pub const PERMANENT_REDIRECT: ErrorType = ErrorType(308, "Err-12280", "Permanent Redirect");
+    pub const BAD_REQUEST: ErrorType = ErrorType(400, "Err-26760", "Bad Request");
+    pub const UNAUTHORIZED: ErrorType = ErrorType(401, "Err-08059", "Unauthorized");
+    pub const PAYMENT_REQUIRED: ErrorType = ErrorType(402, "Err-18076", "Payment Required");
+    pub const FORBIDDEN: ErrorType = ErrorType(403, "Err-23134", "Forbidden");
+    pub const NOT_FOUND: ErrorType = ErrorType(404, "Err-18430", "Not Found");
+    pub const METHOD_NOT_ALLOWED: ErrorType = ErrorType(405, "Err-23585", "Method Not Allowed");
+    pub const NOT_ACCEPTABLE: ErrorType = ErrorType(406, "Err-04289", "Not Acceptable");
+    pub const PROXY_AUTHENTICATION_REQUIRED: ErrorType = ErrorType(407, "Err-17336", "Proxy Authentication Required");
+    pub const REQUEST_TIMEOUT: ErrorType = ErrorType(408, "Err-00565", "Request Timeout");
+    pub const CONFLICT: ErrorType = ErrorType(409, "Err-08442", "Conflict");
+    pub const GONE: ErrorType = ErrorType(410, "Err-19916", "Gone");
+    pub const LENGTH_REQUIRED: ErrorType = ErrorType(411, "Err-09400", "Length Required");
+    pub const PRECONDITION_FAILED: ErrorType = ErrorType(412, "Err-22509", "Precondition Failed");
+    pub const PAYLOAD_TOO_LARGE: ErrorType = ErrorType(413, "Err-10591", "Payload Too Large");
+    pub const URI_TOO_LONG: ErrorType = ErrorType(414, "Err-01377", "URI Too Long");
+    pub const UNSUPPORTED_MEDIA_TYPE: ErrorType = ErrorType(415, "Err-12512", "Unsupported Media Type");
+    pub const RANGE_NOT_SATISFIABLE: ErrorType = ErrorType(416, "Err-21696", "Range Not Satisfiable");
+    pub const EXPECTATION_FAILED: ErrorType = ErrorType(417, "Err-16872", "Expectation Failed");
+    pub const IM_A_TEAPOT: ErrorType = ErrorType(418, "Err-23719", "I'm a teapot");
+    pub const MISDIRECTED_REQUEST: ErrorType = ErrorType(421, "Err-26981", "Misdirected Request");
+    pub const UNPROCESSABLE_ENTITY: ErrorType = ErrorType(422, "Err-12568", "Unprocessable Entity");
+    pub const LOCKED: ErrorType = ErrorType(423, "Err-32695", "Locked");
+    pub const FAILED_DEPENDENCY: ErrorType = ErrorType(424, "Err-19693", "Failed Dependency");
+    pub const UPGRADE_REQUIRED: ErrorType = ErrorType(426, "Err-22991", "Upgrade Required");
+    pub const PRECONDITION_REQUIRED: ErrorType = ErrorType(428, "Err-02452", "Precondition Required");
+    pub const TOO_MANY_REQUESTS: ErrorType = ErrorType(429, "Err-12176", "Too Many Requests");
+    pub const REQUEST_HEADER_FIELDS_TOO_LARGE: ErrorType = ErrorType(431, "Err-07756", "Request Header Fields Too Large");
+    pub const UNAVAILABLE_FOR_LEGAL_REASONS: ErrorType = ErrorType(451, "Err-12136", "Unavailable For Legal Reasons");
+    pub const INTERNAL_SERVER_ERROR: ErrorType = ErrorType(500, "Err-09069", "Internal Server Error");
+    pub const NOT_IMPLEMENTED: ErrorType = ErrorType(501, "Err-03394", "Not Implemented");
+    pub const BAD_GATEWAY: ErrorType = ErrorType(502, "Err-19734", "Bad Gateway");
+    pub const SERVICE_UNAVAILABLE: ErrorType = ErrorType(503, "Err-18979", "Service Unavailable");
+    pub const GATEWAY_TIMEOUT: ErrorType = ErrorType(504, "Err-17595", "Gateway Timeout");
+    pub const HTTP_VERSION_NOT_SUPPORTED: ErrorType = ErrorType(505, "Err-01625", "HTTP Version Not Supported");
+    pub const VARIANT_ALSO_NEGOTIATES: ErrorType = ErrorType(506, "Err-28382", "Variant Also Negotiates");
+    pub const INSUFFICIENT_STORAGE: ErrorType = ErrorType(507, "Err-32132", "Insufficient Storage");
+    pub const LOOP_DETECTED: ErrorType = ErrorType(508, "Err-30770", "Loop Detected");
+    pub const NOT_EXTENDED: ErrorType = ErrorType(510, "Err-19347", "Not Extended");
+    pub const NETWORK_AUTHENTICATION_REQUIRED: ErrorType = ErrorType(511, "Err-31948", "Network Authentication Required");
+}
+
+impl From<std::option::NoneError> for ErrorRepr {
+    fn from(_err: std::option::NoneError) -> ErrorRepr {
+        ErrorRepr::new(HttpErrors::NOT_FOUND)
+    }
+}
+
+impl From<ErrorRepr> for hyper::Response<hyper::Body> {
+    fn from(err: ErrorRepr) -> hyper::Response<hyper::Body> {
+        let mut response = hyper::Response::new(hyper::Body::empty());
+        *response.status_mut() = hyper::StatusCode::from_u16(*err.code())
+            .unwrap_or(hyper::StatusCode::INTERNAL_SERVER_ERROR);
+
+        if let Ok(jdata) = serde_json::to_string(&err) {
+            response.headers_mut().insert(hyper::header::CONTENT_TYPE, "application/json".parse().unwrap());
+            *response.body_mut() = hyper::Body::from(jdata);
+        }
+        response
+    }
+}
+
+impl From<hyper::StatusCode> for ErrorType {
+    fn from(err: hyper::StatusCode) -> ErrorType {
+        match err {
+            hyper::StatusCode::MOVED_PERMANENTLY => HttpErrors::MOVED_PERMANENTLY,
+            hyper::StatusCode::FOUND => HttpErrors::FOUND,
+            hyper::StatusCode::SEE_OTHER => HttpErrors::SEE_OTHER,
+            hyper::StatusCode::NOT_MODIFIED => HttpErrors::NOT_MODIFIED,
+            hyper::StatusCode::USE_PROXY => HttpErrors::USE_PROXY,
+            hyper::StatusCode::TEMPORARY_REDIRECT => HttpErrors::TEMPORARY_REDIRECT,
+            hyper::StatusCode::PERMANENT_REDIRECT => HttpErrors::PERMANENT_REDIRECT,
+            hyper::StatusCode::BAD_REQUEST => HttpErrors::BAD_REQUEST,
+            hyper::StatusCode::UNAUTHORIZED => HttpErrors::UNAUTHORIZED,
+            hyper::StatusCode::PAYMENT_REQUIRED => HttpErrors::PAYMENT_REQUIRED,
+            hyper::StatusCode::FORBIDDEN => HttpErrors::FORBIDDEN,
+            hyper::StatusCode::NOT_FOUND => HttpErrors::NOT_FOUND,
+            hyper::StatusCode::METHOD_NOT_ALLOWED => HttpErrors::METHOD_NOT_ALLOWED,
+            hyper::StatusCode::NOT_ACCEPTABLE => HttpErrors::NOT_ACCEPTABLE,
+            hyper::StatusCode::PROXY_AUTHENTICATION_REQUIRED => HttpErrors::PROXY_AUTHENTICATION_REQUIRED,
+            hyper::StatusCode::REQUEST_TIMEOUT => HttpErrors::REQUEST_TIMEOUT,
+            hyper::StatusCode::CONFLICT => HttpErrors::CONFLICT,
+            hyper::StatusCode::GONE => HttpErrors::GONE,
+            hyper::StatusCode::LENGTH_REQUIRED => HttpErrors::LENGTH_REQUIRED,
+            hyper::StatusCode::PRECONDITION_FAILED => HttpErrors::PRECONDITION_FAILED,
+            hyper::StatusCode::PAYLOAD_TOO_LARGE => HttpErrors::PAYLOAD_TOO_LARGE,
+            hyper::StatusCode::URI_TOO_LONG => HttpErrors::URI_TOO_LONG,
+            hyper::StatusCode::UNSUPPORTED_MEDIA_TYPE => HttpErrors::UNSUPPORTED_MEDIA_TYPE,
+            hyper::StatusCode::RANGE_NOT_SATISFIABLE => HttpErrors::RANGE_NOT_SATISFIABLE,
+            hyper::StatusCode::EXPECTATION_FAILED => HttpErrors::EXPECTATION_FAILED,
+            hyper::StatusCode::IM_A_TEAPOT => HttpErrors::IM_A_TEAPOT,
+            hyper::StatusCode::MISDIRECTED_REQUEST => HttpErrors::MISDIRECTED_REQUEST,
+            hyper::StatusCode::UNPROCESSABLE_ENTITY => HttpErrors::UNPROCESSABLE_ENTITY,
+            hyper::StatusCode::LOCKED => HttpErrors::LOCKED,
+            hyper::StatusCode::FAILED_DEPENDENCY => HttpErrors::FAILED_DEPENDENCY,
+            hyper::StatusCode::UPGRADE_REQUIRED => HttpErrors::UPGRADE_REQUIRED,
+            hyper::StatusCode::PRECONDITION_REQUIRED => HttpErrors::PRECONDITION_REQUIRED,
+            hyper::StatusCode::TOO_MANY_REQUESTS => HttpErrors::TOO_MANY_REQUESTS,
+            hyper::StatusCode::REQUEST_HEADER_FIELDS_TOO_LARGE => HttpErrors::REQUEST_HEADER_FIELDS_TOO_LARGE,
+            hyper::StatusCode::UNAVAILABLE_FOR_LEGAL_REASONS => HttpErrors::UNAVAILABLE_FOR_LEGAL_REASONS,
+            hyper::StatusCode::INTERNAL_SERVER_ERROR => HttpErrors::INTERNAL_SERVER_ERROR,
+            hyper::StatusCode::NOT_IMPLEMENTED => HttpErrors::NOT_IMPLEMENTED,
+            hyper::StatusCode::BAD_GATEWAY => HttpErrors::BAD_GATEWAY,
+            hyper::StatusCode::SERVICE_UNAVAILABLE => HttpErrors::SERVICE_UNAVAILABLE,
+            hyper::StatusCode::GATEWAY_TIMEOUT => HttpErrors::GATEWAY_TIMEOUT,
+            hyper::StatusCode::HTTP_VERSION_NOT_SUPPORTED => HttpErrors::HTTP_VERSION_NOT_SUPPORTED,
+            hyper::StatusCode::VARIANT_ALSO_NEGOTIATES => HttpErrors::VARIANT_ALSO_NEGOTIATES,
+            hyper::StatusCode::INSUFFICIENT_STORAGE => HttpErrors::INSUFFICIENT_STORAGE,
+            hyper::StatusCode::LOOP_DETECTED => HttpErrors::LOOP_DETECTED,
+            hyper::StatusCode::NOT_EXTENDED => HttpErrors::NOT_EXTENDED,
+            hyper::StatusCode::NETWORK_AUTHENTICATION_REQUIRED => HttpErrors::NETWORK_AUTHENTICATION_REQUIRED,
+            _ => panic!("{} is not an error!", err),
+        }
+    }
+}

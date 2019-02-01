@@ -18,6 +18,7 @@ extern crate serde_json;
 fn main() {
     use cdumay_error::ErrorReprBuilder;
     use cdumay_error::http::HttpErrors;
+    use std::collections::HashMap;
     
     let err = ErrorReprBuilder::new(HttpErrors::NOT_FOUND)
         .extra({

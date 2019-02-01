@@ -51,7 +51,7 @@ fn main() {
 ## Features
 
 - **http**: Defines `cdumay_error::http::HttpErrors` and implement the `From` trait for `hyper::Response<hyper::Body>` and `hyper::StatusCode`.
-- **json**: Implement the From trait for `serde_json::Error`.
+- **json**: Implement the `From` trait for `serde_json::Error`.
 
 ## Project Links
 

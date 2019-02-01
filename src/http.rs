@@ -1,5 +1,4 @@
-use crate::{Registry, ErrorType, ErrorRepr};
-use generic::GenericErrors;
+use crate::{Registry, ErrorType, ErrorRepr, ErrorProperties};
 
 pub struct HttpErrors;
 

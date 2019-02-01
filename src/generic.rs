@@ -1,4 +1,4 @@
-use crate::{Registry, ErrorType, ErrorRepr};
+use crate::{Registry, ErrorType, ErrorRepr, ErrorReprBuilder};
 
 pub struct GenericErrors;
 
@@ -29,16 +29,24 @@ impl Registry for GenericErrors {
 
 impl From<serde_value::DeserializerError> for ErrorRepr {
     fn from(err: serde_value::DeserializerError) -> ErrorRepr {
-        let mut res = ErrorRepr::new(GenericErrors::DESERIALIZATION_ERROR);
-        *res.message_mut() = format!("{}", err);
-        res
+        ErrorReprBuilder::new(GenericErrors::DESERIALIZATION_ERROR)
+            .message(format!("{}", err))
+            .build()
     }
 }
 
 impl From<serde_value::SerializerError> for ErrorRepr {
     fn from(err: serde_value::SerializerError) -> ErrorRepr {
-        let mut res = ErrorRepr::new(GenericErrors::SERIALIZATION_ERROR);
-        *res.message_mut() = format!("{}", err);
-        res
+        ErrorReprBuilder::new(GenericErrors::SERIALIZATION_ERROR)
+            .message(format!("{}", err))
+            .build()
+    }
+}
+
+impl From<std::io::Error> for ErrorRepr {
+    fn from(err: std::io::Error) -> ErrorRepr {
+        ErrorReprBuilder::new(GenericErrors::IO_ERROR)
+            .message(format!("{}", err))
+            .build()
     }
 }

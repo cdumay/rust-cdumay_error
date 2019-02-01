@@ -4,8 +4,8 @@ version = "0.1.3"
 authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/cdumay/cdumay-error-rs"
-homepage =  "https://github.com/cdumay/cdumay-error-rs"
+repository = "https://github.com/cdumay/cdumay-errors-rs"
+homepage =  "https://github.com/cdumay/cdumay-errors-rs"
 description = """
 A library to serialize and deserialize error using serde
 """

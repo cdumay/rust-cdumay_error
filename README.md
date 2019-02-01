@@ -8,39 +8,41 @@ cdumay_errors is a basic library used to standardize errors and to serialize the
 
 ```toml
 [dependencies]
-cdumay_errors = "0.1"
+cdumay_error = "0.1"
 ```
 
 ```rust
-extern crate cdumay_errors;
+extern crate cdumay_error;
 extern crate serde_json;
 
-use cdumay_errors::Error;
-use serde_json::{Map, Value, to_string_pretty};
-
-let mut context: Map<String, Value> = Map::new();
-context.insert("url".to_string(), Value::from("https://example.dumay"));
-
-let err = Error::new("Not Found".to_string(), Some(404), Some("NotFound".to_string()), Some(context));
-println!("{}", to_string_pretty(&err).unwrap());
+fn main() {
+    use cdumay_error::ErrorReprBuilder;
+    use cdumay_error::http::HttpErrors;
+    
+    let err = ErrorReprBuilder::new(HttpErrors::NOT_FOUND)
+        .extra({
+            let mut extra = HashMap::new();
+            extra.insert("url".to_string(), Value::from("https://www.example.com/cdumay"));
+            extra
+        })
+        .message("The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.".to_string())
+        .build();
+    println!("{}", to_string_pretty(&err).unwrap());
+}
 ```
 
 ```json
 {
   "code": 404,
   "extra": {
-    "url": "https://example.dumay"
+    "url": "https://www.example.com/cdumay"
   },
-  "message": "Not Found",
-  "msgid": "NotFound"
+  "message": "The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.",
+  "msgid": "Err-18430"
 }
 ```
-
-## Features
-
-- [cdumay-result](https://github.com/cdumay/cdumay-result-rs): A library to serialize and deserialize result using JSON.
 
 ## Project Links
 
 - Issues: https://github.com/cdumay/cdumay-errors-rs/issues
-- Documentation: 
+- Documentation: not available yet

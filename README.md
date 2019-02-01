@@ -31,7 +31,7 @@ fn main() {
             extra.insert("url".to_string(), Value::String("https://www.example.com/cdumay".to_string()));
             extra
         })
-        .message("The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.".to_string())
+        .message("The requested resource could not be found but may be available in the future.".to_string())
         .build();
     println!("{}", serde_json::to_string_pretty(&err).unwrap());
 }
@@ -43,7 +43,7 @@ fn main() {
   "extra": {
     "url": "https://www.example.com/cdumay"
   },
-  "message": "The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.",
+  "message": "The requested resource could not be found but may be available in the future.",
   "msgid": "Err-18430"
 }
 ```

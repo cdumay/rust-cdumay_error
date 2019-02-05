@@ -1,4 +1,5 @@
-use crate::{Registry, ErrorType, ErrorRepr, ErrorProperties};
+use crate::types::{ErrorType,Registry};
+use hyper::StatusCode;
 
 pub struct HttpErrors;
 
@@ -107,75 +108,55 @@ impl Registry for HttpErrors {
     }
 }
 
-impl From<std::option::NoneError> for ErrorRepr {
-    fn from(_err: std::option::NoneError) -> ErrorRepr {
-        ErrorRepr::new(HttpErrors::NOT_FOUND)
-    }
-}
-
-impl From<ErrorRepr> for hyper::Response<hyper::Body> {
-    fn from(err: ErrorRepr) -> hyper::Response<hyper::Body> {
-        let mut response = hyper::Response::new(hyper::Body::empty());
-        *response.status_mut() = hyper::StatusCode::from_u16(*err.code())
-            .unwrap_or(hyper::StatusCode::INTERNAL_SERVER_ERROR);
-
-        if let Ok(jdata) = serde_json::to_string(&err) {
-            response.headers_mut().insert(hyper::header::CONTENT_TYPE, "application/json".parse().unwrap());
-            *response.body_mut() = hyper::Body::from(jdata);
-        }
-        response
-    }
-}
-
-impl From<hyper::StatusCode> for ErrorType {
-    fn from(err: hyper::StatusCode) -> ErrorType {
+impl From<StatusCode> for ErrorType {
+    fn from(err: StatusCode) -> ErrorType {
         match err {
-            hyper::StatusCode::MOVED_PERMANENTLY => HttpErrors::MOVED_PERMANENTLY,
-            hyper::StatusCode::FOUND => HttpErrors::FOUND,
-            hyper::StatusCode::SEE_OTHER => HttpErrors::SEE_OTHER,
-            hyper::StatusCode::NOT_MODIFIED => HttpErrors::NOT_MODIFIED,
-            hyper::StatusCode::USE_PROXY => HttpErrors::USE_PROXY,
-            hyper::StatusCode::TEMPORARY_REDIRECT => HttpErrors::TEMPORARY_REDIRECT,
-            hyper::StatusCode::PERMANENT_REDIRECT => HttpErrors::PERMANENT_REDIRECT,
-            hyper::StatusCode::BAD_REQUEST => HttpErrors::BAD_REQUEST,
-            hyper::StatusCode::UNAUTHORIZED => HttpErrors::UNAUTHORIZED,
-            hyper::StatusCode::PAYMENT_REQUIRED => HttpErrors::PAYMENT_REQUIRED,
-            hyper::StatusCode::FORBIDDEN => HttpErrors::FORBIDDEN,
-            hyper::StatusCode::NOT_FOUND => HttpErrors::NOT_FOUND,
-            hyper::StatusCode::METHOD_NOT_ALLOWED => HttpErrors::METHOD_NOT_ALLOWED,
-            hyper::StatusCode::NOT_ACCEPTABLE => HttpErrors::NOT_ACCEPTABLE,
-            hyper::StatusCode::PROXY_AUTHENTICATION_REQUIRED => HttpErrors::PROXY_AUTHENTICATION_REQUIRED,
-            hyper::StatusCode::REQUEST_TIMEOUT => HttpErrors::REQUEST_TIMEOUT,
-            hyper::StatusCode::CONFLICT => HttpErrors::CONFLICT,
-            hyper::StatusCode::GONE => HttpErrors::GONE,
-            hyper::StatusCode::LENGTH_REQUIRED => HttpErrors::LENGTH_REQUIRED,
-            hyper::StatusCode::PRECONDITION_FAILED => HttpErrors::PRECONDITION_FAILED,
-            hyper::StatusCode::PAYLOAD_TOO_LARGE => HttpErrors::PAYLOAD_TOO_LARGE,
-            hyper::StatusCode::URI_TOO_LONG => HttpErrors::URI_TOO_LONG,
-            hyper::StatusCode::UNSUPPORTED_MEDIA_TYPE => HttpErrors::UNSUPPORTED_MEDIA_TYPE,
-            hyper::StatusCode::RANGE_NOT_SATISFIABLE => HttpErrors::RANGE_NOT_SATISFIABLE,
-            hyper::StatusCode::EXPECTATION_FAILED => HttpErrors::EXPECTATION_FAILED,
-            hyper::StatusCode::IM_A_TEAPOT => HttpErrors::IM_A_TEAPOT,
-            hyper::StatusCode::MISDIRECTED_REQUEST => HttpErrors::MISDIRECTED_REQUEST,
-            hyper::StatusCode::UNPROCESSABLE_ENTITY => HttpErrors::UNPROCESSABLE_ENTITY,
-            hyper::StatusCode::LOCKED => HttpErrors::LOCKED,
-            hyper::StatusCode::FAILED_DEPENDENCY => HttpErrors::FAILED_DEPENDENCY,
-            hyper::StatusCode::UPGRADE_REQUIRED => HttpErrors::UPGRADE_REQUIRED,
-            hyper::StatusCode::PRECONDITION_REQUIRED => HttpErrors::PRECONDITION_REQUIRED,
-            hyper::StatusCode::TOO_MANY_REQUESTS => HttpErrors::TOO_MANY_REQUESTS,
-            hyper::StatusCode::REQUEST_HEADER_FIELDS_TOO_LARGE => HttpErrors::REQUEST_HEADER_FIELDS_TOO_LARGE,
-            hyper::StatusCode::UNAVAILABLE_FOR_LEGAL_REASONS => HttpErrors::UNAVAILABLE_FOR_LEGAL_REASONS,
-            hyper::StatusCode::INTERNAL_SERVER_ERROR => HttpErrors::INTERNAL_SERVER_ERROR,
-            hyper::StatusCode::NOT_IMPLEMENTED => HttpErrors::NOT_IMPLEMENTED,
-            hyper::StatusCode::BAD_GATEWAY => HttpErrors::BAD_GATEWAY,
-            hyper::StatusCode::SERVICE_UNAVAILABLE => HttpErrors::SERVICE_UNAVAILABLE,
-            hyper::StatusCode::GATEWAY_TIMEOUT => HttpErrors::GATEWAY_TIMEOUT,
-            hyper::StatusCode::HTTP_VERSION_NOT_SUPPORTED => HttpErrors::HTTP_VERSION_NOT_SUPPORTED,
-            hyper::StatusCode::VARIANT_ALSO_NEGOTIATES => HttpErrors::VARIANT_ALSO_NEGOTIATES,
-            hyper::StatusCode::INSUFFICIENT_STORAGE => HttpErrors::INSUFFICIENT_STORAGE,
-            hyper::StatusCode::LOOP_DETECTED => HttpErrors::LOOP_DETECTED,
-            hyper::StatusCode::NOT_EXTENDED => HttpErrors::NOT_EXTENDED,
-            hyper::StatusCode::NETWORK_AUTHENTICATION_REQUIRED => HttpErrors::NETWORK_AUTHENTICATION_REQUIRED,
+            StatusCode::MOVED_PERMANENTLY => HttpErrors::MOVED_PERMANENTLY,
+            StatusCode::FOUND => HttpErrors::FOUND,
+            StatusCode::SEE_OTHER => HttpErrors::SEE_OTHER,
+            StatusCode::NOT_MODIFIED => HttpErrors::NOT_MODIFIED,
+            StatusCode::USE_PROXY => HttpErrors::USE_PROXY,
+            StatusCode::TEMPORARY_REDIRECT => HttpErrors::TEMPORARY_REDIRECT,
+            StatusCode::PERMANENT_REDIRECT => HttpErrors::PERMANENT_REDIRECT,
+            StatusCode::BAD_REQUEST => HttpErrors::BAD_REQUEST,
+            StatusCode::UNAUTHORIZED => HttpErrors::UNAUTHORIZED,
+            StatusCode::PAYMENT_REQUIRED => HttpErrors::PAYMENT_REQUIRED,
+            StatusCode::FORBIDDEN => HttpErrors::FORBIDDEN,
+            StatusCode::NOT_FOUND => HttpErrors::NOT_FOUND,
+            StatusCode::METHOD_NOT_ALLOWED => HttpErrors::METHOD_NOT_ALLOWED,
+            StatusCode::NOT_ACCEPTABLE => HttpErrors::NOT_ACCEPTABLE,
+            StatusCode::PROXY_AUTHENTICATION_REQUIRED => HttpErrors::PROXY_AUTHENTICATION_REQUIRED,
+            StatusCode::REQUEST_TIMEOUT => HttpErrors::REQUEST_TIMEOUT,
+            StatusCode::CONFLICT => HttpErrors::CONFLICT,
+            StatusCode::GONE => HttpErrors::GONE,
+            StatusCode::LENGTH_REQUIRED => HttpErrors::LENGTH_REQUIRED,
+            StatusCode::PRECONDITION_FAILED => HttpErrors::PRECONDITION_FAILED,
+            StatusCode::PAYLOAD_TOO_LARGE => HttpErrors::PAYLOAD_TOO_LARGE,
+            StatusCode::URI_TOO_LONG => HttpErrors::URI_TOO_LONG,
+            StatusCode::UNSUPPORTED_MEDIA_TYPE => HttpErrors::UNSUPPORTED_MEDIA_TYPE,
+            StatusCode::RANGE_NOT_SATISFIABLE => HttpErrors::RANGE_NOT_SATISFIABLE,
+            StatusCode::EXPECTATION_FAILED => HttpErrors::EXPECTATION_FAILED,
+            StatusCode::IM_A_TEAPOT => HttpErrors::IM_A_TEAPOT,
+            StatusCode::MISDIRECTED_REQUEST => HttpErrors::MISDIRECTED_REQUEST,
+            StatusCode::UNPROCESSABLE_ENTITY => HttpErrors::UNPROCESSABLE_ENTITY,
+            StatusCode::LOCKED => HttpErrors::LOCKED,
+            StatusCode::FAILED_DEPENDENCY => HttpErrors::FAILED_DEPENDENCY,
+            StatusCode::UPGRADE_REQUIRED => HttpErrors::UPGRADE_REQUIRED,
+            StatusCode::PRECONDITION_REQUIRED => HttpErrors::PRECONDITION_REQUIRED,
+            StatusCode::TOO_MANY_REQUESTS => HttpErrors::TOO_MANY_REQUESTS,
+            StatusCode::REQUEST_HEADER_FIELDS_TOO_LARGE => HttpErrors::REQUEST_HEADER_FIELDS_TOO_LARGE,
+            StatusCode::UNAVAILABLE_FOR_LEGAL_REASONS => HttpErrors::UNAVAILABLE_FOR_LEGAL_REASONS,
+            StatusCode::INTERNAL_SERVER_ERROR => HttpErrors::INTERNAL_SERVER_ERROR,
+            StatusCode::NOT_IMPLEMENTED => HttpErrors::NOT_IMPLEMENTED,
+            StatusCode::BAD_GATEWAY => HttpErrors::BAD_GATEWAY,
+            StatusCode::SERVICE_UNAVAILABLE => HttpErrors::SERVICE_UNAVAILABLE,
+            StatusCode::GATEWAY_TIMEOUT => HttpErrors::GATEWAY_TIMEOUT,
+            StatusCode::HTTP_VERSION_NOT_SUPPORTED => HttpErrors::HTTP_VERSION_NOT_SUPPORTED,
+            StatusCode::VARIANT_ALSO_NEGOTIATES => HttpErrors::VARIANT_ALSO_NEGOTIATES,
+            StatusCode::INSUFFICIENT_STORAGE => HttpErrors::INSUFFICIENT_STORAGE,
+            StatusCode::LOOP_DETECTED => HttpErrors::LOOP_DETECTED,
+            StatusCode::NOT_EXTENDED => HttpErrors::NOT_EXTENDED,
+            StatusCode::NETWORK_AUTHENTICATION_REQUIRED => HttpErrors::NETWORK_AUTHENTICATION_REQUIRED,
             _ => panic!("{} is not an error!", err),
         }
     }

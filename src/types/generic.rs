@@ -1,4 +1,4 @@
-use crate::{Registry, ErrorType, ErrorRepr, ErrorReprBuilder};
+use crate::types::{ErrorType, Registry};
 
 pub struct GenericErrors;
 
@@ -10,6 +10,7 @@ impl GenericErrors {
     pub const VALIDATION_ERROR: ErrorType = ErrorType(400, "Err-05612", "Validation Error");
     pub const SERIALIZATION_ERROR: ErrorType = ErrorType(500, "Err-31807", "Serialization Error");
     pub const DESERIALIZATION_ERROR: ErrorType = ErrorType(500, "Err-01394", "Deserialization Error");
+    pub const NONE: ErrorType = ErrorType(404, "Err-85941", "None value found");
 }
 
 impl Registry for GenericErrors {
@@ -22,31 +23,9 @@ impl Registry for GenericErrors {
             "Err-15452" => Self::GENERIC_ERROR,
             "Err-31807" => Self::SERIALIZATION_ERROR,
             "Err-32583" => Self::UNKNOWN_ERROR,
+            "Err-85941" => Self::NONE,
             _ => Self::default()
         }
     }
 }
 
-impl From<serde_value::DeserializerError> for ErrorRepr {
-    fn from(err: serde_value::DeserializerError) -> ErrorRepr {
-        ErrorReprBuilder::new(GenericErrors::DESERIALIZATION_ERROR)
-            .message(format!("{}", err))
-            .build()
-    }
-}
-
-impl From<serde_value::SerializerError> for ErrorRepr {
-    fn from(err: serde_value::SerializerError) -> ErrorRepr {
-        ErrorReprBuilder::new(GenericErrors::SERIALIZATION_ERROR)
-            .message(format!("{}", err))
-            .build()
-    }
-}
-
-impl From<std::io::Error> for ErrorRepr {
-    fn from(err: std::io::Error) -> ErrorRepr {
-        ErrorReprBuilder::new(GenericErrors::IO_ERROR)
-            .message(format!("{}", err))
-            .build()
-    }
-}

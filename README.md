@@ -19,20 +19,19 @@ extern crate serde_json;
 extern crate serde_value;
 
 fn main() {
-    use cdumay_error::ErrorReprBuilder;
-    use cdumay_error::http::HttpErrors;
+    use cdumay_error::ErrorBuilder;
+    use cdumay_error::types::http::HttpErrors;
+    use cdumay_error::repr::ErrorRepr;
     use std::collections::HashMap;
     use serde_value::Value;
 
-
-    let err = ErrorReprBuilder::new(HttpErrors::NOT_FOUND)
-        .extra({
+    let err = ErrorRepr::from(HttpErrors::NOT_FOUND)
+        .set_message("The requested resource could not be found but may be available in the future.".to_string())
+        .set_extra({
             let mut extra = HashMap::new();
             extra.insert("url".to_string(), Value::String("https://www.example.com/cdumay".to_string()));
             extra
-        })
-        .message("The requested resource could not be found but may be available in the future.".to_string())
-        .build();
+        });
     println!("{}", serde_json::to_string_pretty(&err).unwrap());
 }
 ```
@@ -50,7 +49,7 @@ fn main() {
 
 ## Features
 
-- **http**: Defines `cdumay_error::http::HttpErrors` and implement the `From` trait for `hyper::Response<hyper::Body>` and `hyper::StatusCode`.
+- **http**: Defines `cdumay_error::types::http::HttpErrors` and implement the `From` trait for `hyper::Response<hyper::Body>` and `hyper::StatusCode`.
 - **json**: Implement the `From` trait for `serde_json::Error`.
 
 ## Project Links

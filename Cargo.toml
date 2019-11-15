@@ -4,11 +4,12 @@ version = "0.1.5"
 authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+documentation = "https://docs.rs/cdumay_errors"
 repository = "https://github.com/cdumay/rust-cdumay_errors"
 homepage =  "https://github.com/cdumay/rust-cdumay_errors"
-description = """
-A library to serialize and deserialize error using serde
-"""
+description = "A library to serialize and deserialize error using serde"
+keywords = ["Error", "serde"]
+categories = ["caching", "data-structures", "encoding"]
 
 [badges]
 gitlab = { repository = "cdumay/rust-cdumay_errors" }

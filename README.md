@@ -1,58 +1,57 @@
 # cdumay_error
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Build Status](https://travis-ci.org/cdumay/rust-cdumay_errors.svg?branch=master)](https://travis-ci.org/cdumay/rust-cdumay_errors)
+[![Latest version](https://img.shields.io/crates/v/cdumay_errors.svg)](https://crates.io/crates/cdumay_errors)
+[![Documentation](https://docs.rs/cdumay_errors/badge.svg)](https://docs.rs/cdumay_errors)
+![License](https://img.shields.io/crates/l/cdumay_errors.svg)
 
-cdumay_error is a basic library used to standardize errors and to serialize them into json using [serde_json](https://docs.serde.rs/serde/).
+cdumay_error is a basic library used to standardize errors and serialize them using [serde](https://docs.serde.rs/serde/).
 
 ## Quickstart
 
+_Cargo.toml_:
 ```toml
 [dependencies]
-cdumay_error = { git = "https://github.com/cdumay/cdumay-errors-rs" , features = ["http"] }
+cdumay_error = "0.1"
 serde_json = "1.0"
-serde-value = "0.5"
+serde-value = "0.6"
 ```
 
+_main.rs_:
 ```rust
 extern crate cdumay_error;
 extern crate serde_json;
 extern crate serde_value;
 
 fn main() {
-    use cdumay_error::ErrorBuilder;
-    use cdumay_error::types::http::HttpErrors;
-    use cdumay_error::repr::ErrorRepr;
+    use cdumay_error::{ErrorBuilder, ErrorRepr, GenericErrors};
     use std::collections::HashMap;
     use serde_value::Value;
 
-    let err = ErrorRepr::from(HttpErrors::NOT_FOUND)
-        .set_message("The requested resource could not be found but may be available in the future.".to_string())
+    let err = ErrorRepr::from(GenericErrors::GENERIC_ERROR)
+        .set_message("This is a useless generic error.".into())
         .set_extra({
             let mut extra = HashMap::new();
-            extra.insert("url".to_string(), Value::String("https://www.example.com/cdumay".to_string()));
+            extra.insert("context".into(), Value::String("Example".to_string()));
             extra
         });
     println!("{}", serde_json::to_string_pretty(&err).unwrap());
 }
 ```
-
+_Output_:
 ```json
 {
-  "code": 404,
+  "code": 500,
   "extra": {
-    "url": "https://www.example.com/cdumay"
+    "context": "Example"
   },
-  "message": "The requested resource could not be found but may be available in the future.",
-  "msgid": "Err-18430"
+  "message": "This is a useless generic error.",
+  "msgid": "Err-15452"
 }
 ```
-
-## Features
-
-- **http**: Defines `cdumay_error::types::http::HttpErrors` and implement the `From` trait for `hyper::Response<hyper::Body>` and `hyper::StatusCode`.
-- **json**: Implement the `From` trait for `serde_json::Error`.
-
 ## Project Links
 
-- Issues: https://github.com/cdumay/cdumay-errors-rs/issues
-- Documentation: not available yet
+- Issues: https://github.com/cdumay/rust-cdumay_errors/issues
+- Documentation: https://docs.rs/cdumay_errors
+
+License: MIT

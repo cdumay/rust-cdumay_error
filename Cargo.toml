@@ -1,24 +1,21 @@
 [package]
 name = "cdumay_error"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/cdumay/cdumay-errors-rs"
-homepage =  "https://github.com/cdumay/cdumay-errors-rs"
+repository = "https://github.com/cdumay/rust-cdumay_errors"
+homepage =  "https://github.com/cdumay/rust-cdumay_errors"
 description = """
 A library to serialize and deserialize error using serde
 """
 
-[features]
-default = []
-all = ["http"]
-json = ["serde_json"]
-http = ["hyper", "json"]
+[badges]
+gitlab = { repository = "cdumay/rust-cdumay_errors" }
+travis-ci = { repository = "cdumay/rust-cdumay_errors" }
+maintenance = { status = "as-is" }
 
 [dependencies]
 serde = "1.0"
 serde_derive = "1.0"
-serde-value = "0.5"
-hyper = { version = "0.12", optional = true }
-serde_json = { version = "1.0", optional = true }
+serde-value = "0.6"

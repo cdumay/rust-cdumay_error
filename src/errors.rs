@@ -1,4 +1,25 @@
-use crate::types::{ErrorType, Registry};
+use std::collections::BTreeMap;
+
+use serde_value::Value;
+
+use crate::ErrorInfo;
+
+#[derive(Clone, Copy, Debug)]
+pub struct ErrorType(pub u16, pub  &'static str, pub  &'static str);
+
+impl ErrorInfo for ErrorType {
+    fn code(&self) -> u16 { self.0 }
+    fn extra(&self) -> Option<BTreeMap<String, Value>> { None }
+    fn message(&self) -> String { self.2.to_string() }
+    fn msgid(&self) -> String { self.1.to_string() }
+}
+
+
+pub trait Registry {
+    fn default() -> ErrorType { GenericErrors::GENERIC_ERROR }
+    fn from_msgid(msgid: &str) -> ErrorType;
+}
+
 
 pub struct GenericErrors;
 
@@ -29,3 +50,6 @@ impl Registry for GenericErrors {
     }
 }
 
+impl From<std::option::NoneError> for ErrorType {
+    fn from(_: std::option::NoneError) -> ErrorType { GenericErrors::NONE }
+}

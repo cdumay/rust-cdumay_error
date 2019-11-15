@@ -1,7 +1,7 @@
-//! [![Build Status](https://travis-ci.org/cdumay/rust-cdumay_errors.svg?branch=master)](https://travis-ci.org/cdumay/rust-cdumay_errors)
-//! [![Latest version](https://img.shields.io/crates/v/cdumay_errors.svg)](https://crates.io/crates/cdumay_errors)
-//! [![Documentation](https://docs.rs/cdumay_errors/badge.svg)](https://docs.rs/cdumay_errors)
-//! ![License](https://img.shields.io/crates/l/cdumay_errors.svg)
+//! [![Build Status](https://travis-ci.org/cdumay/rust-cdumay_error.svg?branch=master)](https://travis-ci.org/cdumay/rust-cdumay_error)
+//! [![Latest version](https://img.shields.io/crates/v/cdumay_error.svg)](https://crates.io/crates/cdumay_error)
+//! [![Documentation](https://docs.rs/cdumay_error/badge.svg)](https://docs.rs/cdumay_error)
+//! ![License](https://img.shields.io/crates/l/cdumay_error.svg)
 //!
 //! cdumay_error is a basic library used to standardize errors and serialize them using [serde](https://docs.serde.rs/serde/).
 //!
@@ -49,8 +49,8 @@
 //! ```
 //! ## Project Links
 //!
-//! - Issues: https://github.com/cdumay/rust-cdumay_errors/issues
-//! - Documentation: https://docs.rs/cdumay_errors
+//! - Issues: https://github.com/cdumay/rust-cdumay_error/issues
+//! - Documentation: https://docs.rs/cdumay_error
 #![deny(warnings)]
 #![feature(try_trait)]
 #[macro_use]

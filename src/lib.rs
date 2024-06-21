@@ -12,27 +12,25 @@
 //! [dependencies]
 //! cdumay_error = { git = "https://github.com/cdumay/rust-cdumay_error" }
 //! serde_json = "1.0"
-//! serde-value = "0.6"
 //! ```
 //!
 //! _main.rs_:
 //! ```rust
 //! extern crate cdumay_error;
 //! extern crate serde_json;
-//! extern crate serde_value;
 //!
 //! fn main() {
-//!     use cdumay_error::{ErrorBuilder, ErrorRepr, GenericErrors};
-//!     use std::collections::HashMap;
-//!     use serde_value::Value;
+//!     use cdumay_error::{ErrorRepr, GenericErrors};
+//!     use std::collections::BTreeMap;
+//!     use serde_json::Value;
 //!
-//!     let err = ErrorRepr::from(GenericErrors::GENERIC_ERROR)
-//!         .set_message("This is a useless generic error.".into())
-//!         .set_extra({
-//!             let mut extra = HashMap::new();
-//!             extra.insert("context".into(), Value::String("Example".to_string()));
-//!             extra
-//!         });
+//!     let mut err = ErrorRepr::from(GenericErrors::GENERIC_ERROR);
+//!     err.message = "This is a useless generic error.".to_string();
+//!     err.extra = Some({
+//!         let mut extra = BTreeMap::new();
+//!         extra.insert("context".into(), Value::String("Example".to_string()));
+//!         extra
+//!     });
 //!     println!("{}", serde_json::to_string_pretty(&err).unwrap());
 //! }
 //! ```
@@ -51,23 +49,19 @@
 //!
 //! - Issues: https://github.com/cdumay/rust-cdumay_error/issues
 //! - Documentation: https://docs.rs/cdumay_error
-#![deny(warnings)]
-#![feature(try_trait)]
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_value;
 
-pub use builder::ErrorBuilder;
-pub use errors::{ErrorType, GenericErrors, Registry};
+extern crate serde;
+extern crate serde_json;
+
+pub use common::GenericErrors;
+pub use info::ErrorInfo;
+pub use registry::Registry;
+pub use types::ErrorType;
 pub use repr::ErrorRepr;
 
-mod builder;
-mod errors;
 mod repr;
+mod common;
+mod registry;
+mod info;
+mod types;
 
-pub trait ErrorInfo {
-    fn code(&self) -> u16;
-    fn extra(&self) -> Option<std::collections::BTreeMap<String, serde_value::Value>>;
-    fn message(&self) -> String;
-    fn msgid(&self) -> String;
-}

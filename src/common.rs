@@ -1,25 +1,4 @@
-use std::collections::BTreeMap;
-
-use serde_value::Value;
-
-use crate::ErrorInfo;
-
-#[derive(Clone, Copy, Debug)]
-pub struct ErrorType(pub u16, pub  &'static str, pub  &'static str);
-
-impl ErrorInfo for ErrorType {
-    fn code(&self) -> u16 { self.0 }
-    fn extra(&self) -> Option<BTreeMap<String, Value>> { None }
-    fn message(&self) -> String { self.2.to_string() }
-    fn msgid(&self) -> String { self.1.to_string() }
-}
-
-
-pub trait Registry {
-    fn default() -> ErrorType { GenericErrors::GENERIC_ERROR }
-    fn from_msgid(msgid: &str) -> ErrorType;
-}
-
+use ::{ErrorType, Registry};
 
 pub struct GenericErrors;
 
@@ -35,7 +14,7 @@ impl GenericErrors {
 }
 
 impl Registry for GenericErrors {
-    fn from_msgid(msgid: &str) -> ErrorType {
+    fn from_msgid<'a>(msgid: &'a str) -> ErrorType {
         match msgid {
             "Err-01394" => Self::DESERIALIZATION_ERROR,
             "Err-05612" => Self::VALIDATION_ERROR,
@@ -45,11 +24,7 @@ impl Registry for GenericErrors {
             "Err-31807" => Self::SERIALIZATION_ERROR,
             "Err-32583" => Self::UNKNOWN_ERROR,
             "Err-85941" => Self::NONE,
-            _ => Self::default()
+            _ => Self::default(),
         }
     }
-}
-
-impl From<std::option::NoneError> for ErrorType {
-    fn from(_: std::option::NoneError) -> ErrorType { GenericErrors::NONE }
 }

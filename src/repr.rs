@@ -1,9 +1,10 @@
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::error::Error;
 
-use serde_value::Value;
+use serde_json::Value;
 
-use crate::{ErrorInfo, GenericErrors};
+use ::{ErrorInfo, GenericErrors,ErrorType};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ErrorRepr {
@@ -14,24 +15,11 @@ pub struct ErrorRepr {
     pub msgid: String,
 }
 
-impl<I: ErrorInfo> From<I> for ErrorRepr {
-    fn from(info: I) -> ErrorRepr {
-        ErrorRepr {
-            msgid: info.msgid().clone(),
-            message: info.message().clone(),
-            code: info.code().clone(),
-            extra: info.extra().clone(),
-        }
-    }
-}
-
-
 impl Default for ErrorRepr {
     fn default() -> ErrorRepr {
         ErrorRepr::from(GenericErrors::GENERIC_ERROR)
     }
 }
-
 
 impl Error for ErrorRepr {
     fn description(&self) -> &str {
@@ -42,5 +30,16 @@ impl Error for ErrorRepr {
 impl std::fmt::Display for ErrorRepr {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}: {}", self.msgid, self.message)
+    }
+}
+
+impl From<ErrorType> for ErrorRepr {
+    fn from(etype: ErrorType) -> ErrorRepr {
+        ErrorRepr {
+            code: etype.code(),
+            extra: None,
+            message: etype.message().to_string(),
+            msgid: etype.msgid().to_string(),
+        }
     }
 }

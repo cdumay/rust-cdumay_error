@@ -5,7 +5,7 @@
 //! _Cargo.toml_:
 //! ```toml
 //! [dependencies]
-//! cdumay_error = { git = "https://github.com/cdumay/rust-cdumay_error" }
+//! cdumay_error = "0.2"
 //! serde_json = "1.0"
 //! ```
 //!

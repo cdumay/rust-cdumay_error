@@ -8,7 +8,7 @@ cdumay_error is a basic library used to standardize errors and serialize them us
 
 ```toml
 [dependencies]
-cdumay_error = { git = "https://github.com/cdumay/rust-cdumay_error" }
+cdumay_error = "0.2"
 serde_json = "1.0"
 ```
 

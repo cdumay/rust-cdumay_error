@@ -47,10 +47,5 @@ fn main() {
 }
 ```
 
-### Project Links
-
-* Issues: https://github.com/cdumay/rust-cdumay_error/issues
-* Documentation: https://docs.rs/cdumay_error
-
 
  [__link0]: https://docs.serde.rs/serde/

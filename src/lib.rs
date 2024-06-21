@@ -40,10 +40,7 @@
 //!   "msgid": "Err-15452"
 //! }
 //! ```
-//! ## Project Links
-//!
-//! - Issues: https://github.com/cdumay/rust-cdumay_error/issues
-//! - Documentation: https://docs.rs/cdumay_error
+
 
 extern crate serde;
 extern crate serde_json;

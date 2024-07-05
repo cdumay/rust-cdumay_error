@@ -8,7 +8,7 @@ cdumay_error is a basic library used to standardize errors and serialize them us
 
 ```toml
 [dependencies]
-cdumay_error = "0.2"
+cdumay_error = "0.3"
 serde_json = "1.0"
 ```
 
@@ -18,19 +18,21 @@ serde_json = "1.0"
 extern crate cdumay_error;
 extern crate serde_json;
 
-fn main() {
-    use cdumay_error::{ErrorRepr, GenericErrors};
-    use std::collections::BTreeMap;
-    use serde_json::Value;
+use cdumay_error::{ErrorBuilder, GenericErrors, JsonError};
+use std::collections::BTreeMap;
+use serde_json::Value;
 
-    let mut err = ErrorRepr::from(GenericErrors::GENERIC_ERROR);
-    err.message = "This is a useless generic error.".to_string();
-    err.extra = Some({
-        let mut extra = BTreeMap::new();
-        extra.insert("context".into(), Value::String("Example".to_string()));
-        extra
-    });
-    println!("{}", serde_json::to_string_pretty(&err).unwrap());
+fn main() {
+
+    let err = ErrorBuilder::from(GenericErrors::GENERIC_ERROR)
+        .message("This is a useless generic error.".to_string())
+        .extra({
+            let mut extra = BTreeMap::new();
+            extra.insert("context".into(), Value::String("Example".to_string()));
+            extra
+        })
+        .build();
+    println!("{}", serde_json::to_string_pretty(&JsonError::from(err)).unwrap());
 }
 ```
 

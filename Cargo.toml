@@ -1,12 +1,13 @@
 [package]
 name = "cdumay_error"
-version = "0.2.1"
+version = "0.3.0"
 
 authors = ["Cédric Dumay <cedric.dumay@gmail.com>"]
 categories = ["caching", "data-structures", "encoding"]
 description = "A library to serialize and deserialize error using serde"
 documentation = "https://docs.rs/cdumay_error"
-homepage =  "https://github.com/cdumay/rust-cdumay_error"
+edition = "2021"
+homepage = "https://github.com/cdumay/rust-cdumay_error"
 keywords = ["Error", "serde"]
 license = "BSD-3-Clause"
 readme = "README.md"

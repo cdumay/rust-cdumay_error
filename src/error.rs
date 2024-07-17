@@ -6,7 +6,7 @@ use crate::ErrorKind;
 pub struct Error {
     pub kind: ErrorKind,
     pub message: String,
-    pub extra: Option<BTreeMap<String, serde_json::Value>>,
+    pub extra: Option<BTreeMap<String, cdumay_core::Value>>,
 }
 
 

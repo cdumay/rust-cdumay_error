@@ -10,7 +10,7 @@ pub struct JsonError {
     msgid: String,
     message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    extra: Option<BTreeMap<String, serde_json::Value>>,
+    extra: Option<BTreeMap<String, cdumay_core::Value>>,
 }
 
 impl From<Error> for JsonError {
@@ -28,7 +28,7 @@ impl From<Error> for JsonError {
 mod test {
     use std::collections::BTreeMap;
 
-    use serde_json::Value;
+    use cdumay_core::Value;
 
     use crate::{ErrorBuilder, JsonError};
 

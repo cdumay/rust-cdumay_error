@@ -8,6 +8,7 @@ cdumay_error is a basic library used to standardize errors and serialize them us
 
 ```toml
 [dependencies]
+cdumay_core = "0.0"
 cdumay_error = "0.3"
 serde_json = "1.0"
 ```
@@ -16,11 +17,12 @@ serde_json = "1.0"
 
 ```rust
 extern crate cdumay_error;
+extern crate cdumay_core;
 extern crate serde_json;
 
+use cdumay_core::Value;
 use cdumay_error::{ErrorBuilder, GenericErrors, JsonError};
 use std::collections::BTreeMap;
-use serde_json::Value;
 
 fn main() {
 

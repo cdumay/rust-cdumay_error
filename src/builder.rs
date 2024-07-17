@@ -4,7 +4,7 @@ use crate::{Error, ErrorKind, GenericErrors};
 pub struct ErrorBuilder {
     kind: ErrorKind,
     message: Option<String>,
-    extra: Option<BTreeMap<String, serde_json::Value>>,
+    extra: Option<BTreeMap<String, cdumay_core::Value>>,
 }
 
 impl ErrorBuilder {
@@ -12,7 +12,7 @@ impl ErrorBuilder {
         self.message = Some(message);
         self
     }
-    pub fn extra(mut self, extra: BTreeMap<String, serde_json::Value>) -> Self {
+    pub fn extra(mut self, extra: BTreeMap<String, cdumay_core::Value>) -> Self {
         self.extra = Some(extra);
         self
     }
@@ -47,7 +47,7 @@ impl Default for ErrorBuilder {
 mod test {
     use std::collections::BTreeMap;
 
-    use serde_json::Value;
+    use cdumay_core::Value;
 
     use crate::{ErrorBuilder, GenericErrors};
 

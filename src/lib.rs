@@ -5,6 +5,7 @@
 //! _Cargo.toml_:
 //! ```toml
 //! [dependencies]
+//! cdumay_core = "0.0"
 //! cdumay_error = "0.3"
 //! serde_json = "1.0"
 //! ```
@@ -12,11 +13,12 @@
 //! _main.rs_:
 //! ```rust
 //! extern crate cdumay_error;
+//! extern crate cdumay_core;
 //! extern crate serde_json;
 //!
+//! use cdumay_core::Value;
 //! use cdumay_error::{ErrorBuilder, GenericErrors, JsonError};
 //! use std::collections::BTreeMap;
-//! use serde_json::Value;
 //!
 //! fn main() {
 //!
@@ -45,7 +47,6 @@
 
 
 extern crate serde;
-extern crate serde_json;
 
 pub use builder::ErrorBuilder;
 pub use error::Error;
